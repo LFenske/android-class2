@@ -1,0 +1,37 @@
+1.b)a. start and click "start ActivityTwo"
+
+1 onCreate
+1 onStart
+1 onResume
+1 onPause
+1 onStop
+2 onCreate
+2 onStart
+2 onResume
+
+1.c)a. click "close ActivityTwo"
+
+2 onPause
+2 onStop
+2 onDestroy
+1 onRestart
+1 onStart
+1 onResume
+
+1.d)a. click "start ActivityTwo", click Home
+
+1 onPause
+1 onStop
+2 onCreate
+2 onStart
+2 onResume
+
+2 onPause
+2 onStop
+
+1.e)a. start again
+
+2 onRestart
+2 onStart
+2 onResume
+
