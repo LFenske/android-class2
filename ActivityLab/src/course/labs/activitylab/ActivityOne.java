@@ -29,6 +29,7 @@ public class ActivityOne extends Activity {
 	private int mRestart = 0;
 	private int mStart   = 0;
 	private int mResume  = 0;
+	private boolean no_restore = false;
 
 	private TextView mTvCreate ;
 	private TextView mTvRestart;
@@ -65,21 +66,16 @@ public class ActivityOne extends Activity {
 		});
 
 		// Check for previously saved state
-		if (savedInstanceState != null) {
-			// Restore value of counters from saved state
-			savedInstanceState.getInt(CREATE_KEY,  mCreate );
-			savedInstanceState.getInt(RESTART_KEY, mRestart);
-			savedInstanceState.getInt(START_KEY,   mStart  );
-			savedInstanceState.getInt(RESUME_KEY,  mResume );
-		}
-
-		// Emit LogCat message
-		Log.i(TAG, "onCreate");
+		onRestoreInstanceState(savedInstanceState);
 
 		// Update the appropriate count variable
 		// Update the user interface via the displayCounts() method
 		mCreate++;
+		onSaveInstanceState(savedInstanceState);
 		displayCounts();
+
+		// Emit LogCat message
+		Log.i(TAG, "Entered the onCreate() method");
 	}
 
 	// Lifecycle callback overrides
@@ -88,26 +84,30 @@ public class ActivityOne extends Activity {
 	public void onStart() {
 		super.onStart();
 
-		// Emit LogCat message
-		Log.i(TAG, "onStart");
-
 		// Update the appropriate count variable
 		// Update the user interface
 		mStart++;
+		//onSaveInstanceState(savedInstanceState);
 		displayCounts();
+
+		// Emit LogCat message
+		Log.i(TAG, "Entered the onStart() method");
+		
+		no_restore = true;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		// Emit LogCat message
-		Log.i(TAG, "onResume");
-
 		// Update the appropriate count variable
 		// Update the user interface
 		mResume++;
+		//onSaveInstanceState(savedInstanceState);
 		displayCounts();
+
+		// Emit LogCat message
+		Log.i(TAG, "Entered the onResume() method");
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class ActivityOne extends Activity {
 		super.onPause();
 
 		// Emit LogCat message
-		Log.i(TAG, "onPause");
+		Log.i(TAG, "Entered the onPause() method");
 	}
 
 	@Override
@@ -123,20 +123,21 @@ public class ActivityOne extends Activity {
 		super.onStop();
 
 		// Emit LogCat message
-		Log.i(TAG, "onStop");
+		Log.i(TAG, "Entered the onStop() method");
 	}
 
 	@Override
 	public void onRestart() {
 		super.onRestart();
 
-		// Emit LogCat message
-		Log.i(TAG, "onRestart");
-
 		// Update the appropriate count variable
 		// Update the user interface
 		mRestart++;
+		//onSaveInstanceState(savedInstanceState);
 		displayCounts();
+
+		// Emit LogCat message
+		Log.i(TAG, "Entered the onRestart() method");
 	}
 
 	@Override
@@ -144,16 +145,34 @@ public class ActivityOne extends Activity {
 		super.onDestroy();
 
 		// Emit LogCat message
-		Log.i(TAG, "onDestroy");
+		Log.i(TAG, "Entered the onDestroy() method");
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		// Save state information with a collection of key-value pairs
-		savedInstanceState.putInt(CREATE_KEY,  mCreate );
-		savedInstanceState.putInt(RESTART_KEY, mRestart);
-		savedInstanceState.putInt(START_KEY,   mStart  );
-		savedInstanceState.putInt(RESUME_KEY,  mResume );
+		if (savedInstanceState != null) {
+			savedInstanceState.putInt(CREATE_KEY,  mCreate );
+			savedInstanceState.putInt(RESTART_KEY, mRestart);
+			savedInstanceState.putInt(START_KEY,   mStart  );
+			savedInstanceState.putInt(RESUME_KEY,  mResume );
+			//Log.i(TAG, "onSaveInstanceState");
+		}
+		no_restore = false;
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		// Check for previously saved state
+		if (savedInstanceState != null && ! no_restore) {
+			// Restore value of counters from saved state
+			mCreate  = savedInstanceState.getInt(CREATE_KEY );
+			mRestart = savedInstanceState.getInt(RESTART_KEY);
+			mStart   = savedInstanceState.getInt(START_KEY  );
+			mResume  = savedInstanceState.getInt(RESUME_KEY );
+			displayCounts();
+			//Log.i(TAG, "onRestoreInstanceState");
+		}
 	}
 
 	// Updates the displayed counters
